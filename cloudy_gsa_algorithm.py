@@ -1,5 +1,3 @@
-# --- START OF REVISED cloudy_gsa_algorithm.py ---
-
 import numpy as np
 import math
 from collections import namedtuple

@@ -12,28 +12,28 @@ from cloudy_gsa_algorithm import cloudy_gsa_scheduler
 
 # --- Konfigurasi Lingkungan ---
 
-#load_dotenv()
-
-#VM_SPECS = {
-#    'vm1': {'ip': os.getenv("VM1_IP"), 'cpu': 1, 'ram_gb': 1},
-#    'vm2': {'ip': os.getenv("VM2_IP"), 'cpu': 2, 'ram_gb': 2},
-#    'vm3': {'ip': os.getenv("VM3_IP"), 'cpu': 4, 'ram_gb': 4},
-#    'vm4': {'ip': os.getenv("VM4_IP"), 'cpu': 8, 'ram_gb': 4},
-#}
+load_dotenv()
 
 VM_SPECS = {
-    'vm1': {'ip': '127.0.0.1', 'port': 5001, 'cpu': 1, 'ram_gb': 1},
-    'vm2': {'ip': '127.0.0.1', 'port': 5002, 'cpu': 2, 'ram_gb': 2},
-    'vm3': {'ip': '127.0.0.1', 'port': 5003, 'cpu': 4, 'ram_gb': 4},
-    'vm4': {'ip': '127.0.0.1', 'port': 5004, 'cpu': 8, 'ram_gb': 4},
+    'vm1': {'ip': os.getenv("VM1_IP"), 'cpu': 1, 'ram_gb': 1},
+    'vm2': {'ip': os.getenv("VM2_IP"), 'cpu': 2, 'ram_gb': 2},
+    'vm3': {'ip': os.getenv("VM3_IP"), 'cpu': 4, 'ram_gb': 4},
+    'vm4': {'ip': os.getenv("VM4_IP"), 'cpu': 8, 'ram_gb': 4},
 }
 
-#VM_PORT = 5000
+#VM_SPECS = {
+#    'vm1': {'ip': '127.0.0.1', 'port': 5001, 'cpu': 1, 'ram_gb': 1},
+#    'vm2': {'ip': '127.0.0.1', 'port': 5002, 'cpu': 2, 'ram_gb': 2},
+#    'vm3': {'ip': '127.0.0.1', 'port': 5003, 'cpu': 4, 'ram_gb': 4},
+#    'vm4': {'ip': '127.0.0.1', 'port': 5004, 'cpu': 8, 'ram_gb': 4},
+#}
+
+VM_PORT = 5000
 DATASET_FILE = 'dataset.txt'
 RESULTS_FILE = 'result.csv'
 GSA_ITERATIONS = 1000
 
-VM = namedtuple('VM', ['name', 'ip', 'port', 'cpu_cores', 'ram_gb'])
+VM = namedtuple('VM', ['name', 'ip', 'cpu_cores', 'ram_gb'])
 Task = namedtuple('Task', ['id', 'name', 'index', 'cpu_load'])
 
 # --- Fungsi Helper & Definisi Task ---
@@ -79,7 +79,7 @@ async def execute_task_on_vm(task: Task, vm: VM, client: httpx.AsyncClient,
     Mencatat hasil dan waktu.
     """
     #url = f"http://{vm.ip}:{VM_PORT}/task/{task.index}"
-    url = f"http://{vm.ip}:{vm.port}/task/{task.index}"
+    url = f"http://{vm.ip}:{VM_PORT}/task/{task.index}"
     task_start_time = None
     task_finish_time = None
     task_exec_time = -1.0
@@ -231,11 +231,8 @@ def calculate_and_print_metrics(results_list: list, vms: list[VM], total_schedul
 # --- 6. Fungsi Main ---
 
 async def main():
-    # 1. Inisialisasi
-    #vms = [VM(name, spec['ip'], spec['cpu'], spec['ram_gb']) 
-    #        for name, spec in VM_SPECS.items()]
-    
-    vms = [VM(name, spec['ip'], spec['port'], spec['cpu'], spec['ram_gb']) 
+    # 1. Siapkan VM dan Tugas    
+    vms = [VM(name, spec['ip'], spec['cpu'], spec['ram_gb']) 
             for name, spec in VM_SPECS.items()]
 
     tasks = load_tasks(DATASET_FILE)
