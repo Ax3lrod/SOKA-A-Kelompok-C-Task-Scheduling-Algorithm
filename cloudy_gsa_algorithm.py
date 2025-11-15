@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from collections import namedtuple
+from typing import Tuple
 
 # Definisi Tipe (bisa disesuaikan jika perlu)
 VM = namedtuple('VM', ['name', 'ip', 'cpu_cores', 'ram_gb'])
@@ -72,10 +73,9 @@ def _compute_mass(fitness: np.ndarray):
 def _map_to_solution(position: np.ndarray, n_vms: int) -> np.ndarray:
     """Membulatkan posisi kontinu ke solusi diskrit (indeks VM)."""
     return np.clip(np.round(position), 0, n_vms - 1).astype(int)
-
 # Mekanisme Local Search yang Lebih Cerdas
 
-def _local_search_improvement(solution: np.ndarray, tasks_dict: dict, vms_dict: dict, vm_map: list) -> (np.ndarray, float):
+def _local_search_improvement(solution: np.ndarray, tasks_dict: dict, vms_dict: dict, vm_map: list) -> Tuple[np.ndarray, float]:
     """
     Mencoba memindahkan satu tugas dari VM yang paling sibuk
     ke VM yang paling tidak sibuk untuk mengurangi imbalance.
