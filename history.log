@@ -1,76 +1,76 @@
 (.venv) PS C:\Users\Aryasatya Alaauddin\soka\task-scheduling> python scheduler.py
 Berhasil memuat 20 tugas dari dataset.txt
-Memulai Cloudy-GSA (V3 - Utilization Focus, Dynamic G, 1000 iterasi)...
-Estimasi Fitness Awal (Acak): 1220836.90
-Cloudy-GSA Selesai. Fitness Terbaik: 521237.47
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1847303.49
+Cloudy-GSA Selesai. Fitness Terbaik: 527442.80
 
 Penugasan Tugas Terbaik Ditemukan:
-  - Tugas 0 -> vm3
-  - Tugas 1 -> vm2
-  - Tugas 2 -> vm3
+  - Tugas 0 -> vm2
+  - Tugas 1 -> vm1
+  - Tugas 2 -> vm4
   - Tugas 3 -> vm2
   - Tugas 4 -> vm4
-  - Tugas 5 -> vm4
-  - Tugas 6 -> vm4
-  - Tugas 7 -> vm3
-  - Tugas 8 -> vm2
-  - Tugas 9 -> vm3
+  - Tugas 5 -> vm2
+  - Tugas 6 -> vm3
+  - Tugas 7 -> vm1
+  - Tugas 8 -> vm3
+  - Tugas 9 -> vm1
   - ... etc.
 
 Memulai eksekusi 20 tugas secara paralel...
-Mengeksekusi task-6-0 (idx: 0) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-5-1 (idx: 1) di vm2 (IP: 10.15.42.78)...
-Mengeksekusi task-8-2 (idx: 2) di vm3 (IP: 10.15.42.79)...
+Mengeksekusi task-6-0 (idx: 0) di vm2 (IP: 10.15.42.78)...
+Mengeksekusi task-5-1 (idx: 1) di vm1 (IP: 10.15.42.77)...
+Mengeksekusi task-8-2 (idx: 2) di vm4 (IP: 10.15.42.80)...
 Mengeksekusi task-2-3 (idx: 3) di vm2 (IP: 10.15.42.78)...
 Mengeksekusi task-10-4 (idx: 4) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-3-5 (idx: 5) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-4-6 (idx: 6) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-4-7 (idx: 7) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-3-9 (idx: 9) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-1-11 (idx: 11) di vm1 (IP: 10.15.42.77)...
+Mengeksekusi task-4-6 (idx: 6) di vm3 (IP: 10.15.42.79)...
+Mengeksekusi task-7-8 (idx: 8) di vm3 (IP: 10.15.42.79)...
+Mengeksekusi task-9-10 (idx: 10) di vm3 (IP: 10.15.42.79)...
 Mengeksekusi task-9-13 (idx: 13) di vm4 (IP: 10.15.42.80)...
 Mengeksekusi task-8-15 (idx: 15) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-2-16 (idx: 16) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-6-18 (idx: 18) di vm4 (IP: 10.15.42.80)...
+Mengeksekusi task-5-17 (idx: 17) di vm3 (IP: 10.15.42.79)...
 Mengeksekusi task-10-19 (idx: 19) di vm4 (IP: 10.15.42.80)...
-Selesai task-3-5 (idx: 5) di vm4. Waktu: 0.6252s
-Selesai task-1-11 (idx: 11) di vm1. Waktu: 0.6554s
-Mengeksekusi task-7-12 (idx: 12) di vm1 (IP: 10.15.42.77)...
-Selesai task-2-3 (idx: 3) di vm2. Waktu: 1.1826s
-Mengeksekusi task-7-8 (idx: 8) di vm2 (IP: 10.15.42.78)...
-Selesai task-3-9 (idx: 9) di vm3. Waktu: 1.1807s
-Mengeksekusi task-9-10 (idx: 10) di vm3 (IP: 10.15.42.79)...
-Selesai task-6-0 (idx: 0) di vm3. Waktu: 5.2985s
-Selesai task-5-1 (idx: 1) di vm2. Waktu: 6.4688s
-Mengeksekusi task-5-17 (idx: 17) di vm2 (IP: 10.15.42.78)...
-Selesai task-10-4 (idx: 4) di vm4. Waktu: 6.5490s
-Selesai task-4-7 (idx: 7) di vm3. Waktu: 7.0902s
-Selesai task-6-18 (idx: 18) di vm4. Waktu: 8.7540s
-Selesai task-9-13 (idx: 13) di vm4. Waktu: 13.4681s
-Selesai task-8-2 (idx: 2) di vm3. Waktu: 14.4943s
-Selesai task-7-8 (idx: 8) di vm2. Waktu: 15.8239s
-Selesai task-8-15 (idx: 15) di vm4. Waktu: 17.3551s
-Selesai task-2-16 (idx: 16) di vm4. Waktu: 17.5626s
-Selesai task-4-6 (idx: 6) di vm4. Waktu: 18.5888s
-Selesai task-7-12 (idx: 12) di vm1. Waktu: 20.8579s
-Mengeksekusi task-1-14 (idx: 14) di vm1 (IP: 10.15.42.77)...
-Selesai task-1-14 (idx: 14) di vm1. Waktu: 0.5530s
-Selesai task-5-17 (idx: 17) di vm2. Waktu: 16.0077s
-Selesai task-9-10 (idx: 10) di vm3. Waktu: 22.5429s
-Selesai task-10-19 (idx: 19) di vm4. Waktu: 24.4244s
+Selesai task-2-3 (idx: 3) di vm2. Waktu: 0.9257s
+Mengeksekusi task-3-5 (idx: 5) di vm2 (IP: 10.15.42.78)...
+Selesai task-8-2 (idx: 2) di vm4. Waktu: 3.9960s
+Selesai task-6-0 (idx: 0) di vm2. Waktu: 8.7146s
+Mengeksekusi task-7-12 (idx: 12) di vm2 (IP: 10.15.42.78)...
+Selesai task-9-10 (idx: 10) di vm3. Waktu: 8.7624s
+Mengeksekusi task-6-18 (idx: 18) di vm3 (IP: 10.15.42.79)...
+Selesai task-10-4 (idx: 4) di vm4. Waktu: 9.8745s
+Selesai task-3-5 (idx: 5) di vm2. Waktu: 9.7304s
+Mengeksekusi task-1-14 (idx: 14) di vm2 (IP: 10.15.42.78)...
+Selesai task-5-1 (idx: 1) di vm1. Waktu: 10.7282s
+Mengeksekusi task-4-7 (idx: 7) di vm1 (IP: 10.15.42.77)...
+Selesai task-7-8 (idx: 8) di vm3. Waktu: 14.0413s
+Selesai task-9-13 (idx: 13) di vm4. Waktu: 14.7429s
+Selesai task-4-6 (idx: 6) di vm3. Waktu: 15.6426s
+Selesai task-4-7 (idx: 7) di vm1. Waktu: 6.7700s
+Mengeksekusi task-3-9 (idx: 9) di vm1 (IP: 10.15.42.77)...
+Selesai task-5-17 (idx: 17) di vm3. Waktu: 18.2910s
+Selesai task-8-15 (idx: 15) di vm4. Waktu: 18.5313s
+Selesai task-7-12 (idx: 12) di vm2. Waktu: 12.4948s
+Mengeksekusi task-2-16 (idx: 16) di vm2 (IP: 10.15.42.78)...
+Selesai task-1-14 (idx: 14) di vm2. Waktu: 10.7509s
+Selesai task-3-9 (idx: 9) di vm1. Waktu: 3.9120s
+Mengeksekusi task-1-11 (idx: 11) di vm1 (IP: 10.15.42.77)...
+Selesai task-1-11 (idx: 11) di vm1. Waktu: 0.5046s
+Selesai task-6-18 (idx: 18) di vm3. Waktu: 13.4560s
+Selesai task-2-16 (idx: 16) di vm2. Waktu: 1.0376s
+Selesai task-10-19 (idx: 19) di vm4. Waktu: 24.4684s
 
-Semua eksekusi tugas selesai dalam 24.4414 detik.
+Semua eksekusi tugas selesai dalam 24.4869 detik.
 
 Data hasil eksekusi disimpan ke result.csv
 
 --- Hasil ---
 Total Tugas Selesai       : 20
-Makespan (Waktu Total)    : 24.4414 detik
-Throughput                : 0.8183 tugas/detik
-Total CPU Time            : 219.4829 detik
-Total Wait Time           : 30.9966 detik
-Average Start Time (rel)  : 1.5617 detik
-Average Execution Time    : 10.9741 detik
-Average Finish Time (rel) : 12.5358 detik
-Imbalance Degree          : 1.5539
-Resource Utilization (CPU): 59.8664%
+Makespan (Waktu Total)    : 24.4869 detik
+Throughput                : 0.8168 tugas/detik
+Total CPU Time            : 207.3751 detik
+Total Wait Time           : 99.8567 detik
+Average Start Time (rel)  : 5.0055 detik
+Average Execution Time    : 10.3688 detik
+Average Finish Time (rel) : 15.3742 detik
+Imbalance Degree          : 0.9586
+Resource Utilization (CPU): 56.4587%

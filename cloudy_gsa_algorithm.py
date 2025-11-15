@@ -8,20 +8,21 @@ VM = namedtuple('VM', ['name', 'ip', 'cpu_cores', 'ram_gb'])
 Task = namedtuple('Task', ['id', 'name', 'index', 'cpu_load'])
 
 # --- Konstanta Algoritma ---
-POP_SIZE = 50
+POP_SIZE = 60 # Meningkatkan populasi untuk pencarian yang lebih komprehensif
 G0 = 100.0
 ALPHA = 20.0
 EPS = 1e-12
-INERTIA = 0.75 # Sedikit meningkatkan inertia untuk eksplorasi
-VELOCITY_CLAMP = 2.0
-MUTATION_RATE = 0.02
-STAGNATION_LIMIT = 75 # [OPTIMASI #2] Batas iterasi sebelum G di-reset
-LOCAL_SEARCH_CANDIDATES = 5 # Jumlah partikel terbaik yang dioptimasi local search
+MUTATION_RATE = 0.01
+LOCAL_SEARCH_CANDIDATES = 7
 
-# --- [OPTIMASI #1] Bobot untuk Fitness Function 3-Objektif ---
-W_MAKESPAN = 1.0   # Tetap penting untuk kecepatan
-W_STD_DEV = 1.2    # Menjaga keseimbangan
-W_IDLE_TIME = 0.5  # Mendorong utilisasi sumber daya
+# [OPTIMASI #2] Konstanta untuk Inersia Adaptif
+INERTIA_MAX = 0.9
+INERTIA_MIN = 0.4
+
+# [OPTIMASI #1] Bobot untuk Fitness Function Terpadu
+W_MAKESPAN = 1.0   # Fokus utama pada kecepatan
+W_STD_DEV = 1.7    # Penalti SANGAT TINGGI untuk ketidakseimbangan
+W_UTILIZATION = 1.2 # Penalti TINGGI untuk utilisasi yang rendah
 
 # --- Fungsi Fitness (Fungsi Biaya) yang Dioptimalkan ---
 
@@ -42,99 +43,75 @@ def _get_vm_loads(solution: np.ndarray, tasks_dict: dict, vms_dict: dict, vm_map
 
 def _evaluate_fitness(solution: np.ndarray, tasks_dict: dict, vms_dict: dict, vm_map: list) -> float:
     """
-    [OPTIMASI #1] Fitness Function 3-Objektif: Makespan, Keseimbangan, dan Utilisasi.
+    [OPTIMASI #1] Fitness Function Terpadu: Makespan dengan Penalti untuk
+    Imbalance dan Utilisasi Rendah.
     """
     vm_loads = _get_vm_loads(solution, tasks_dict, vms_dict, vm_map)
+    n_vms = len(vm_map)
     
-    # 1. Minimalkan Makespan
+    # Komponen Utama: Makespan
     makespan = np.max(vm_loads)
     
-    # 2. Minimalkan ketidakseimbangan (Standar Deviasi Beban)
+    # Penalti 1: Ketidakseimbangan (Imbalance)
     load_std_dev = np.std(vm_loads)
+    imbalance_penalty = W_STD_DEV * load_std_dev
     
-    # 3. Minimalkan waktu menganggur (untuk menaikkan utilisasi)
-    total_idle_time = np.sum(makespan - vm_loads)
+    # Penalti 2: Utilisasi Rendah (Low Utilization)
+    total_cpu_time = np.sum(vm_loads)
+    total_available_time = n_vms * makespan
     
-    fitness_score = (W_MAKESPAN * makespan) + \
-                    (W_STD_DEV * load_std_dev) + \
-                    (W_IDLE_TIME * total_idle_time)
+    resource_utilization = total_cpu_time / (total_available_time + EPS)
+    
+    # Penalti adalah kebalikan dari utilisasi, diskalakan dengan makespan
+    utilization_penalty = W_UTILIZATION * (1.0 - resource_utilization) * makespan
+    
+    # Fitness Total
+    fitness_score = (W_MAKESPAN * makespan) + imbalance_penalty + utilization_penalty
     
     return fitness_score
 
 # --- Fungsi Helper ---
 
 def _compute_mass(fitness: np.ndarray):
-    """Menghitung massa partikel berdasarkan fitness."""
     best, worst = np.min(fitness), np.max(fitness)
-    if (worst - best) < EPS:
-        return np.ones_like(fitness) / len(fitness)
-    
-    raw_mass = (worst - fitness) / (worst - best)
-    total_mass = np.sum(raw_mass)
-    return raw_mass / (total_mass + EPS)
+    if (worst - best) < EPS: return np.ones_like(fitness) / len(fitness)
+    raw_mass = (worst - fitness) / (worst - best); return raw_mass / (np.sum(raw_mass) + EPS)
 
-def _map_to_solution(position: np.ndarray, n_vms: int) -> np.ndarray:
-    """Membulatkan posisi kontinu ke solusi diskrit."""
+def _map_to_solution(position: np.ndarray, n_vms: int):
     return np.clip(np.round(position), 0, n_vms - 1).astype(int)
 
-# --- [OPTIMASI #3] Mekanisme Local Search Cerdas (Move & Swap) ---
-
+# --- Mekanisme Local Search Cerdas ---
 def _intelligent_local_search(solution: np.ndarray, tasks_dict: dict, vms_dict: dict, vm_map: list) -> np.ndarray:
-    """
-    Mencoba perbaikan lokal dengan memindahkan atau menukar tugas
-    antara VM yang paling sibuk dan paling lengang.
-    """
     current_fitness = _evaluate_fitness(solution, tasks_dict, vms_dict, vm_map)
     best_solution = solution.copy()
 
-    for _ in range(2): # Lakukan beberapa kali iterasi perbaikan
+    for _ in range(2):
         vm_loads = _get_vm_loads(best_solution, tasks_dict, vms_dict, vm_map)
-        most_loaded_vm_idx = np.argmax(vm_loads)
-        least_loaded_vm_idx = np.argmin(vm_loads)
-
+        most_loaded_vm_idx, least_loaded_vm_idx = np.argmax(vm_loads), np.argmin(vm_loads)
         if most_loaded_vm_idx == least_loaded_vm_idx: break
-
         tasks_on_most = [i for i, vm in enumerate(best_solution) if vm == most_loaded_vm_idx]
-        tasks_on_least = [i for i, vm in enumerate(best_solution) if vm == least_loaded_vm_idx]
-
         if not tasks_on_most: break
-
-        # 1. Coba 'Move'
-        for task_idx in tasks_on_most:
-            temp_solution = best_solution.copy()
-            temp_solution[task_idx] = least_loaded_vm_idx
-            new_fitness = _evaluate_fitness(temp_solution, tasks_dict, vms_dict, vm_map)
-            if new_fitness < current_fitness:
-                current_fitness = new_fitness
-                best_solution = temp_solution
-
-        # 2. Coba 'Swap' (jika ada tugas di VM yg lengang)
-        if tasks_on_least:
-            for t_most in tasks_on_most:
-                for t_least in tasks_on_least:
-                    temp_solution = best_solution.copy()
-                    temp_solution[t_most], temp_solution[t_least] = temp_solution[t_least], temp_solution[t_most]
-                    new_fitness = _evaluate_fitness(temp_solution, tasks_dict, vms_dict, vm_map)
-                    if new_fitness < current_fitness:
-                        current_fitness = new_fitness
-                        best_solution = temp_solution
-                        
+        
+        # Coba 'Move' tugas paling ringan dari VM tersibuk
+        task_loads = {i: tasks_dict[i].cpu_load for i in tasks_on_most}
+        task_to_move = min(task_loads, key=task_loads.get)
+        
+        temp_solution = best_solution.copy()
+        temp_solution[task_to_move] = least_loaded_vm_idx
+        new_fitness = _evaluate_fitness(temp_solution, tasks_dict, vms_dict, vm_map)
+        if new_fitness < current_fitness:
+            current_fitness, best_solution = new_fitness, temp_solution
+            
     return best_solution
 
 
 # --- Algoritma Utama CloudyGSA ---
 
 def cloudy_gsa_scheduler(tasks: list[Task], vms: list[VM], iterations: int = 1000) -> dict:
-    """
-    Menjalankan algoritma Cloudy-GSA (V3) dengan Fitness 3-Objektif,
-    Dynamic G, dan Intelligent Local Search.
-    """
-    print(f"Memulai Cloudy-GSA (V3 - Utilization Focus, Dynamic G, {iterations} iterasi)...")
+    print(f"Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, {iterations} iterasi)...")
 
-    n_tasks = len(tasks)
-    n_vms = len(vms)
-    vms_dict = {vm.name: vm for vm in vms}
-    tasks_dict = {task.id: task for task in tasks}
+    n_tasks, n_vms = len(tasks), len(vms)
+    vms_dict = {vm.name: vm for vm in vms}; tasks_dict = {task.id: task for task in tasks}
     vm_map = [vm.name for vm in vms]
 
     pos = np.random.uniform(0, n_vms - 1, (POP_SIZE, n_tasks))
@@ -148,18 +125,11 @@ def cloudy_gsa_scheduler(tasks: list[Task], vms: list[VM], iterations: int = 100
     
     print(f"Estimasi Fitness Awal (Acak): {gbest_val:.2f}")
 
+    inertia_weight = INERTIA_MAX
     stagnation_counter = 0
-    last_gbest_val = gbest_val
 
     for t in range(iterations):
         G = G0 * math.exp(-ALPHA * (t / iterations))
-
-        # [OPTIMASI #2] Mekanisme Anti-Stagnasi
-        if stagnation_counter >= STAGNATION_LIMIT:
-            G = G0 # Reset gravitasi untuk "mengguncang" sistem
-            stagnation_counter = 0
-            # print(f"Iterasi {t}: Stagnasi terdeteksi. Mereset G.")
-
         mass = _compute_mass(fitness)
         
         force = np.zeros((POP_SIZE, n_tasks))
@@ -172,46 +142,35 @@ def cloudy_gsa_scheduler(tasks: list[Task], vms: list[VM], iterations: int = 100
                     force[i] += np.random.rand(n_tasks) * f
         
         accel = force / (mass[:, np.newaxis] + EPS)
-        vel = INERTIA * vel + accel
-        vel = np.clip(vel, -VELOCITY_CLAMP, VELOCITY_CLAMP)
+        vel = inertia_weight * vel + accel
         pos += vel
         pos = np.clip(pos, 0, n_vms - 1)
 
-        # Evaluasi ulang, terapkan Local Search dan Mutasi
         sorted_indices = np.argsort(fitness)
         for i, p_idx in enumerate(sorted_indices):
-            # Terapkan local search cerdas pada beberapa partikel terbaik
             if i < LOCAL_SEARCH_CANDIDATES:
                 current_solution = _map_to_solution(pos[p_idx], n_vms)
-                improved_solution = _intelligent_local_search(current_solution, tasks_dict, vms_dict, vm_map)
-                pos[p_idx] = improved_solution.astype(float)
-
-            # Terapkan mutasi acak
+                pos[p_idx] = _intelligent_local_search(current_solution, tasks_dict, vms_dict, vm_map).astype(float)
             if np.random.rand() < MUTATION_RATE:
-                task_to_mutate = np.random.randint(n_tasks)
-                new_vm = np.random.randint(n_vms)
+                task_to_mutate, new_vm = np.random.randint(n_tasks), np.random.randint(n_vms)
                 pos[p_idx, task_to_mutate] = new_vm
-            
             fitness[p_idx] = _evaluate_fitness(_map_to_solution(pos[p_idx], n_vms), tasks_dict, vms_dict, vm_map)
         
-        # Elitisme: Simpan solusi terbaik
         current_best_idx = np.argmin(fitness)
         if fitness[current_best_idx] < gbest_val:
-            gbest_val = fitness[current_best_idx]
-            gbest_pos = pos[current_best_idx].copy()
+            gbest_val, gbest_pos = fitness[current_best_idx], pos[current_best_idx].copy()
             stagnation_counter = 0
-            if t > 0 and t % 100 == 0:
-                print(f"Iterasi {t}: Fitness Baru Terbaik: {gbest_val:.2f}")
+            # [OPTIMASI #2] Inersia Adaptif: Sukses -> turunkan inersia (lebih presisi)
+            inertia_weight = max(INERTIA_MIN, inertia_weight - 0.05)
+            if t > 0 and t % 100 == 0: print(f"Iterasi {t}: Fitness Baru Terbaik: {gbest_val:.2f}")
         else:
             stagnation_counter += 1
-            pos[np.argmax(fitness)] = gbest_pos # Ganti yg terburuk dengan yg terbaik
+            # [OPTIMASI #2] Inersia Adaptif: Stagnan -> naikkan inersia (eksplorasi)
+            if stagnation_counter > 20: inertia_weight = min(INERTIA_MAX, inertia_weight + 0.05)
+            pos[np.argmax(fitness)] = gbest_pos
 
     print(f"Cloudy-GSA Selesai. Fitness Terbaik: {gbest_val:.2f}")
 
     best_solution_discrete = _map_to_solution(gbest_pos, n_vms)
-    best_assignment = {
-        task.id: vm_map[best_solution_discrete[i]]
-        for i, task in enumerate(tasks)
-    }
-        
+    best_assignment = {task.id: vm_map[best_solution_discrete[i]] for i, task in enumerate(tasks)}
     return best_assignment
