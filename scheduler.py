@@ -21,17 +21,11 @@ VM_SPECS = {
     'vm4': {'ip': os.getenv("VM4_IP"), 'cpu': 8, 'ram_gb': 4},
 }
 
-#VM_SPECS = {
-#    'vm1': {'ip': '127.0.0.1', 'port': 5001, 'cpu': 1, 'ram_gb': 1},
-#    'vm2': {'ip': '127.0.0.1', 'port': 5002, 'cpu': 2, 'ram_gb': 2},
-#    'vm3': {'ip': '127.0.0.1', 'port': 5003, 'cpu': 4, 'ram_gb': 4},
-#    'vm4': {'ip': '127.0.0.1', 'port': 5004, 'cpu': 8, 'ram_gb': 4},
-#}
-
 VM_PORT = 5000
 DATASET_FILE = 'dataset.txt'
-RESULTS_FILE = 'result.csv'
+BASE_RESULTS_FILE = 'result_run' # Nanti akan jadi result_run_1.csv, dst
 GSA_ITERATIONS = 1000
+TOTAL_RUNS = 10  # Jumlah pengulangan test
 
 VM = namedtuple('VM', ['name', 'ip', 'cpu_cores', 'ram_gb'])
 Task = namedtuple('Task', ['id', 'name', 'index', 'cpu_load'])
@@ -53,7 +47,6 @@ def load_tasks(dataset_path: str) -> list[Task]:
             try:
                 index = int(line.strip())
                 if not 1 <= index <= 10:
-                    print(f"Peringatan: Task index {index} di baris {i+1} di luar rentang (1-10).")
                     continue
                 
                 cpu_load = get_task_load(index)
@@ -65,20 +58,14 @@ def load_tasks(dataset_path: str) -> list[Task]:
                     cpu_load=cpu_load,
                 ))
             except ValueError:
-                print(f"Peringatan: Mengabaikan baris {i+1} yang tidak valid: '{line.strip()}'")
+                pass
     
-    print(f"Berhasil memuat {len(tasks)} tugas dari {dataset_path}")
     return tasks
 
 # --- Eksekutor Tugas Asinkron ---
 
 async def execute_task_on_vm(task: Task, vm: VM, client: httpx.AsyncClient, 
                             vm_semaphore: asyncio.Semaphore, results_list: list):
-    """
-    Mengirim request GET ke VM yang ditugaskan, dibatasi oleh semaphore VM.
-    Mencatat hasil dan waktu.
-    """
-    #url = f"http://{vm.ip}:{VM_PORT}/task/{task.index}"
     url = f"http://{vm.ip}:{VM_PORT}/task/{task.index}"
     task_start_time = None
     task_finish_time = None
@@ -89,31 +76,22 @@ async def execute_task_on_vm(task: Task, vm: VM, client: httpx.AsyncClient,
     
     try:
         async with vm_semaphore:
-            # Waktu tunggu selesai, eksekusi dimulai
             task_wait_time = time.monotonic() - wait_start_mono
-            
-            print(f"Mengeksekusi {task.name} (idx: {task.id}) di {vm.name} (IP: {vm.ip})...")
             
             # Catat waktu mulai
             task_start_mono = time.monotonic()
             task_start_time = datetime.now()
             
             # Kirim request GET
-            response = await client.get(url, timeout=300.0) # Timeout 5 menit
+            response = await client.get(url, timeout=300.0)
             response.raise_for_status()
             
             # Catat waktu selesai
             task_finish_time = datetime.now()
             task_exec_time = time.monotonic() - task_start_mono
             
-            print(f"Selesai {task.name} (idx: {task.id}) di {vm.name}. Waktu: {task_exec_time:.4f}s")
-            
-    except httpx.HTTPStatusError as e:
-        print(f"Error HTTP pada {task.name} di {vm.name}: {e}", file=sys.stderr)
-    except httpx.RequestError as e:
-        print(f"Error Request pada {task.name} di {vm.name}: {e}", file=sys.stderr)
     except Exception as e:
-        print(f"Error tidak diketahui pada {task.name} di {vm.name}: {e}", file=sys.stderr)
+        print(f"Error pada {task.name} di {vm.name}: {e}", file=sys.stderr)
         
     finally:
         if task_start_time is None:
@@ -133,18 +111,16 @@ async def execute_task_on_vm(task: Task, vm: VM, client: httpx.AsyncClient,
 
 # --- Fungsi Paska-Proses & Metrik ---
 
-def write_results_to_csv(results_list: list):
-    """Menyimpan hasil eksekusi ke file CSV."""
+def write_results_to_csv(results_list: list, run_id: int):
+    """Menyimpan hasil eksekusi ke file CSV dengan ID run tertentu."""
     if not results_list:
-        print("Tidak ada hasil untuk ditulis ke CSV.", file=sys.stderr)
         return
 
-    # Urutkan berdasarkan 'index' untuk keterbacaan
+    filename = f"{BASE_RESULTS_FILE}_{run_id}.csv"
     results_list.sort(key=lambda x: x['index'])
 
     headers = ["index", "task_name", "vm_assigned", "start_time", "exec_time", "finish_time", "wait_time"]
     
-    # Format datetime agar lebih mudah dibaca di CSV
     formatted_results = []
     min_start = min(item['start_time'] for item in results_list)
     for r in results_list:
@@ -153,34 +129,32 @@ def write_results_to_csv(results_list: list):
         new_r['finish_time'] = (r['finish_time'] - min_start).total_seconds()
         formatted_results.append(new_r)
 
-    formatted_results.sort(key=lambda item: item['start_time'])
-
     try:
-        with open(RESULTS_FILE, 'w', newline='', encoding='utf-8') as f:
+        with open(filename, 'w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             writer.writerows(formatted_results)
-        print(f"\nData hasil eksekusi disimpan ke {RESULTS_FILE}")
     except IOError as e:
-        print(f"Error menulis ke CSV {RESULTS_FILE}: {e}", file=sys.stderr)
+        print(f"Error menulis ke CSV {filename}: {e}", file=sys.stderr)
 
-def calculate_and_print_metrics(results_list: list, vms: list[VM], total_schedule_time: float):
+def calculate_metrics(results_list: list, vms: list[VM], total_schedule_time: float) -> dict:
+    """
+    Menghitung metrik dan mengembalikan dictionary berisi nilai-nilai metrik.
+    Tidak lagi melakukan print (print dilakukan di main loop).
+    """
     try:
         df = pd.DataFrame(results_list)
     except pd.errors.EmptyDataError:
-        print("Error: Hasil kosong, tidak ada metrik untuk dihitung.", file=sys.stderr)
-        return
+        return {}
 
     # Konversi kolom waktu
     df['start_time'] = pd.to_datetime(df['start_time'])
     df['finish_time'] = pd.to_datetime(df['finish_time'])
     
-    # Filter 'failed' tasks (exec_time < 0)
     success_df = df[df['exec_time'] > 0].copy()
     
     if success_df.empty:
-        print("Tidak ada tugas yang berhasil diselesaikan. Metrik tidak dapat dihitung.")
-        return
+        return {}
 
     num_tasks = len(success_df)
     
@@ -191,18 +165,11 @@ def calculate_and_print_metrics(results_list: list, vms: list[VM], total_schedul
     avg_exec_time = success_df['exec_time'].mean()
     avg_wait_time = success_df['wait_time'].mean()
     
-    # Waktu mulai & selesai relatif terhadap awal
-    min_start = success_df['start_time'].min()
-    success_df['rel_start_time'] = (success_df['start_time'] - min_start).dt.total_seconds()
-    success_df['rel_finish_time'] = (success_df['finish_time'] - min_start).dt.total_seconds()
-    
-    avg_start_time = success_df['rel_start_time'].mean()
-    avg_finish_time = success_df['rel_finish_time'].mean()
-    
-    makespan = total_schedule_time # Waktu dari eksekusi pertama hingga terakhir
+    # Makespan & Throughput
+    makespan = total_schedule_time 
     throughput = num_tasks / makespan if makespan > 0 else 0
     
-    # Imbalance Degree (Degree of Imbalance)
+    # Imbalance Degree
     vm_exec_times = success_df.groupby('vm_assigned')['exec_time'].sum()
     max_load = vm_exec_times.max()
     min_load = vm_exec_times.min()
@@ -210,83 +177,119 @@ def calculate_and_print_metrics(results_list: list, vms: list[VM], total_schedul
     imbalance_degree = (max_load - min_load) / avg_load if avg_load > 0 else 0
     
     # Resource Utilization
-    total_available_cpu_time = 0
     total_cores = sum(vm.cpu_cores for vm in vms)
     total_available_cpu_time = makespan * total_cores
     resource_utilization = total_cpu_time / total_available_cpu_time if total_available_cpu_time > 0 else 0
 
-    # Tampilkan Metrik
-    print("\n--- Hasil ---")
-    print(f"Total Tugas Selesai       : {num_tasks}")
-    print(f"Makespan (Waktu Total)    : {makespan:.4f} detik")
-    print(f"Throughput                : {throughput:.4f} tugas/detik")
-    print(f"Total CPU Time            : {total_cpu_time:.4f} detik")
-    print(f"Total Wait Time           : {total_wait_time:.4f} detik")
-    print(f"Average Start Time (rel)  : {avg_start_time:.4f} detik")
-    print(f"Average Execution Time    : {avg_exec_time:.4f} detik")
-    print(f"Average Finish Time (rel) : {avg_finish_time:.4f} detik")
-    print(f"Imbalance Degree          : {imbalance_degree:.4f}")
-    print(f"Resource Utilization (CPU): {resource_utilization:.4%}")
+    return {
+        "Makespan": makespan,
+        "Throughput": throughput,
+        "Total CPU Time": total_cpu_time,
+        "Total Wait Time": total_wait_time,
+        "Avg Execution Time": avg_exec_time,
+        "Avg Wait Time": avg_wait_time,
+        "Imbalance Degree": imbalance_degree,
+        "Resource Utilization": resource_utilization
+    }
 
-# --- 6. Fungsi Main ---
+# --- Fungsi Eksekusi Satu Kali ---
 
-async def main():
-    # 1. Siapkan VM dan Tugas    
-    vms = [VM(name, spec['ip'], spec['cpu'], spec['ram_gb']) 
-            for name, spec in VM_SPECS.items()]
-
-    tasks = load_tasks(DATASET_FILE)
-    if not tasks:
-        print("Tidak ada tugas untuk dijadwalkan. Keluar.", file=sys.stderr)
-        return
-        
+async def run_single_test(run_id: int, tasks: list[Task], vms: list[VM]) -> dict:
+    print(f"\n--- Memulai Test Run ke-{run_id} ---")
+    
     tasks_dict = {task.id: task for task in tasks}
     vms_dict = {vm.name: vm for vm in vms}
 
-    # 2. Jalankan Algoritma Penjadwalan (CloudyGSA)
+    # 1. Jalankan Algoritma Penjadwalan
+    # Catatan: Jika algoritma deterministik, hasilnya akan selalu sama. 
+    # Jika stokastik (seperti GSA), hasil bisa berubah tiap run.
     best_assignment = cloudy_gsa_scheduler(tasks, vms, GSA_ITERATIONS)
     
-    print("\nPenugasan Tugas Terbaik Ditemukan:")
-    for i in range(min(10, len(best_assignment))): # Tampilkan 10 pertama
-        print(f"  - Tugas {i} -> {best_assignment[i]}")
-    if len(best_assignment) > 10:
-        print("  - ... etc.")
-
-    # 3. Siapkan Eksekusi
+    # 2. Siapkan Eksekusi
     results_list = []
-    
-    # Buat semaphore untuk setiap VM berdasarkan core CPU
     vm_semaphores = {vm.name: asyncio.Semaphore(vm.cpu_cores) for vm in vms}
     
-    # Buat satu HTTP client untuk semua request
     async with httpx.AsyncClient() as client:
-        
-        # Siapkan semua coroutine tugas
         all_task_coroutines = []
         for task_id, vm_name in best_assignment.items():
             task = tasks_dict[task_id]
             vm = vms_dict[vm_name]
             sem = vm_semaphores[vm_name]
-            
             all_task_coroutines.append(
                 execute_task_on_vm(task, vm, client, sem, results_list)
             )
             
-        print(f"\nMemulai eksekusi {len(all_task_coroutines)} tugas secara paralel...")
+        print(f"Run {run_id}: Mengeksekusi {len(all_task_coroutines)} tugas...")
         
-        # 4. Jalankan Semua Tugas dan Ukur Waktu Total
-        schedule_start_time = time.monotonic()
-        
+        start_time = time.monotonic()
         await asyncio.gather(*all_task_coroutines)
+        end_time = time.monotonic()
         
-        schedule_end_time = time.monotonic()
-        total_schedule_time = schedule_end_time - schedule_start_time
-        
-        print(f"\nSemua eksekusi tugas selesai dalam {total_schedule_time:.4f} detik.")
+        total_time = end_time - start_time
+        print(f"Run {run_id} selesai dalam {total_time:.4f} detik.")
+
+    # 3. Simpan & Hitung
+    write_results_to_csv(results_list, run_id)
+    metrics = calculate_metrics(results_list, vms, total_time)
     
-    # 5. Simpan Hasil dan Hitung Metrik
-    write_results_to_csv(results_list)
-    calculate_and_print_metrics(results_list, vms, total_schedule_time)
+    # Tampilkan metrik singkat untuk run ini
+    if metrics:
+        print(f"Run {run_id} Metrics -> Makespan: {metrics['Makespan']:.2f}s, Utilization: {metrics['Resource Utilization']:.2%}")
+    
+    return metrics
+
+# --- Fungsi Main Utama ---
+
+async def main():
+    print(f"Mempersiapkan {TOTAL_RUNS} kali pengujian...")
+    
+    # Load Data
+    vms = [VM(name, spec['ip'], spec['cpu'], spec['ram_gb']) for name, spec in VM_SPECS.items()]
+    tasks = load_tasks(DATASET_FILE)
+    
+    if not tasks:
+        print("Tidak ada tugas. Keluar.")
+        return
+
+    all_run_metrics = []
+
+    # Loop Eksekusi
+    for i in range(1, TOTAL_RUNS + 1):
+        metrics = await run_single_test(i, tasks, vms)
+        if metrics:
+            all_run_metrics.append(metrics)
+        
+        # Optional: Jeda sedikit antar run agar port benar-benar bersih
+        if i < TOTAL_RUNS:
+            await asyncio.sleep(2)
+
+    # Hitung Rata-rata
+    print("\n" + "="*40)
+    print(f"HASIL AKHIR RATA-RATA DARI {TOTAL_RUNS} RUN")
+    print("="*40)
+
+    if all_run_metrics:
+        df_metrics = pd.DataFrame(all_run_metrics)
+        avg_metrics = df_metrics.mean()
+        
+        # Tampilkan Tabel
+        print(df_metrics)
+        print("-" * 40)
+        
+        print("\nRATA-RATA METRIK:")
+        for key, value in avg_metrics.items():
+            if "Utilization" in key:
+                print(f"{key:<25}: {value:.4%}")
+            else:
+                print(f"{key:<25}: {value:.4f}")
+                
+        # Simpan Summary ke CSV
+        df_metrics.loc['Average'] = avg_metrics
+        df_metrics.to_csv('summary_metrics_10_runs.csv', index=True)
+        print(f"\nRingkasan metrik disimpan ke 'summary_metrics_10_runs.csv'")
+        
+    else:
+        print("Gagal mendapatkan metrik dari pengujian.")
 
 if __name__ == "__main__":
     asyncio.run(main())

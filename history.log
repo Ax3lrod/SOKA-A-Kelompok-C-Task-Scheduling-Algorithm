@@ -1,76 +1,115 @@
 (.venv) PS C:\Users\Aryasatya Alaauddin\soka\task-scheduling> python scheduler.py
-Berhasil memuat 20 tugas dari dataset.txt
+Mempersiapkan 10 kali pengujian...
+
+--- Memulai Test Run ke-1 ---
 Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
-Estimasi Fitness Awal (Acak): 1463552.97
-Cloudy-GSA Selesai. Fitness Terbaik: 528705.17
+Estimasi Fitness Awal (Acak): 1328449.80
+Cloudy-GSA Selesai. Fitness Terbaik: 527442.80
+Run 1: Mengeksekusi 20 tugas...
+Run 1 selesai dalam 24.2967 detik.
+Run 1 Metrics -> Makespan: 24.30s, Utilization: 59.42%
 
-Penugasan Tugas Terbaik Ditemukan:
-  - Tugas 0 -> vm3
-  - Tugas 1 -> vm1
-  - Tugas 2 -> vm3
-  - Tugas 3 -> vm2
-  - Tugas 4 -> vm4
-  - Tugas 5 -> vm3
-  - Tugas 6 -> vm4
-  - Tugas 7 -> vm2
-  - Tugas 8 -> vm3
-  - Tugas 9 -> vm3
-  - ... etc.
+--- Memulai Test Run ke-2 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1271887.67
+Iterasi 300: Fitness Baru Terbaik: 665268.45
+Cloudy-GSA Selesai. Fitness Terbaik: 597228.59
+Run 2: Mengeksekusi 20 tugas...
+Run 2 selesai dalam 23.9361 detik.
+Run 2 Metrics -> Makespan: 23.94s, Utilization: 54.26%
 
-Memulai eksekusi 20 tugas secara paralel...
-Mengeksekusi task-6-0 (idx: 0) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-5-1 (idx: 1) di vm1 (IP: 10.15.42.77)...
-Mengeksekusi task-8-2 (idx: 2) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-2-3 (idx: 3) di vm2 (IP: 10.15.42.78)...
-Mengeksekusi task-10-4 (idx: 4) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-3-5 (idx: 5) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-4-6 (idx: 6) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-4-7 (idx: 7) di vm2 (IP: 10.15.42.78)...
-Mengeksekusi task-7-8 (idx: 8) di vm3 (IP: 10.15.42.79)...
-Mengeksekusi task-7-12 (idx: 12) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-9-13 (idx: 13) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-8-15 (idx: 15) di vm4 (IP: 10.15.42.80)...
-Mengeksekusi task-10-19 (idx: 19) di vm4 (IP: 10.15.42.80)...
-Selesai task-2-3 (idx: 3) di vm2. Waktu: 0.9818s
-Mengeksekusi task-9-10 (idx: 10) di vm2 (IP: 10.15.42.78)...
-Selesai task-8-15 (idx: 15) di vm4. Waktu: 3.9809s
-Selesai task-4-7 (idx: 7) di vm2. Waktu: 4.4951s
-Mengeksekusi task-1-14 (idx: 14) di vm2 (IP: 10.15.42.78)...
-Selesai task-7-8 (idx: 8) di vm3. Waktu: 5.7328s
-Mengeksekusi task-3-9 (idx: 9) di vm3 (IP: 10.15.42.79)...
-Selesai task-6-0 (idx: 0) di vm3. Waktu: 9.9379s
-Mengeksekusi task-2-16 (idx: 16) di vm3 (IP: 10.15.42.79)...
-Selesai task-10-4 (idx: 4) di vm4. Waktu: 9.9300s
-Selesai task-5-1 (idx: 1) di vm1. Waktu: 10.7136s
-Mengeksekusi task-1-11 (idx: 11) di vm1 (IP: 10.15.42.77)...
-Selesai task-3-5 (idx: 5) di vm3. Waktu: 10.9356s
-Mengeksekusi task-6-18 (idx: 18) di vm3 (IP: 10.15.42.79)...
-Selesai task-1-11 (idx: 11) di vm1. Waktu: 0.5421s
-Mengeksekusi task-5-17 (idx: 17) di vm1 (IP: 10.15.42.77)...
-Selesai task-10-19 (idx: 19) di vm4. Waktu: 15.9612s
-Selesai task-4-6 (idx: 6) di vm4. Waktu: 16.8851s
-Selesai task-8-2 (idx: 2) di vm3. Waktu: 18.3331s
-Selesai task-3-9 (idx: 9) di vm3. Waktu: 13.7174s
-Selesai task-2-16 (idx: 16) di vm3. Waktu: 9.9557s
-Selesai task-9-13 (idx: 13) di vm4. Waktu: 21.6956s
-Selesai task-9-10 (idx: 10) di vm2. Waktu: 21.0297s
-Selesai task-5-17 (idx: 17) di vm1. Waktu: 10.7573s
-Selesai task-1-14 (idx: 14) di vm2. Waktu: 17.7149s
-Selesai task-6-18 (idx: 18) di vm3. Waktu: 13.0164s
-Selesai task-7-12 (idx: 12) di vm4. Waktu: 24.6664s
+--- Memulai Test Run ke-3 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1683930.71
+Cloudy-GSA Selesai. Fitness Terbaik: 542506.66
+Run 3: Mengeksekusi 20 tugas...
+Run 3 selesai dalam 24.4803 detik.
+Run 3 Metrics -> Makespan: 24.48s, Utilization: 55.94%
 
-Semua eksekusi tugas selesai dalam 24.6841 detik.
+--- Memulai Test Run ke-4 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1527472.31
+Cloudy-GSA Selesai. Fitness Terbaik: 530645.10
+Run 4: Mengeksekusi 20 tugas...
+Run 4 selesai dalam 24.0609 detik.
+Run 4 Metrics -> Makespan: 24.06s, Utilization: 54.19%
 
-Data hasil eksekusi disimpan ke result.csv
+--- Memulai Test Run ke-5 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1575230.80
+Iterasi 100: Fitness Baru Terbaik: 886494.71
+Cloudy-GSA Selesai. Fitness Terbaik: 530645.10
+Run 5: Mengeksekusi 20 tugas...
+Run 5 selesai dalam 23.1413 detik.
+Run 5 Metrics -> Makespan: 23.14s, Utilization: 58.35%
 
---- Hasil ---
-Total Tugas Selesai       : 20
-Makespan (Waktu Total)    : 24.6841 detik
-Throughput                : 0.8102 tugas/detik
-Total CPU Time            : 240.9826 detik
-Total Wait Time           : 54.0254 detik
-Average Start Time (rel)  : 2.7169 detik
-Average Execution Time    : 12.0491 detik
-Average Finish Time (rel) : 14.7660 detik
-Imbalance Degree          : 1.1803
-Resource Utilization (CPU): 65.0844%
+--- Memulai Test Run ke-6 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1655383.88
+Iterasi 300: Fitness Baru Terbaik: 530910.87
+Cloudy-GSA Selesai. Fitness Terbaik: 530910.87
+Run 6: Mengeksekusi 20 tugas...
+Run 6 selesai dalam 24.4528 detik.
+Run 6 Metrics -> Makespan: 24.45s, Utilization: 59.13%
+
+--- Memulai Test Run ke-7 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1740678.30
+Cloudy-GSA Selesai. Fitness Terbaik: 534547.83
+Run 7: Mengeksekusi 20 tugas...
+Run 7 selesai dalam 23.8425 detik.
+Run 7 Metrics -> Makespan: 23.84s, Utilization: 69.45%
+
+--- Memulai Test Run ke-8 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 964874.36
+Cloudy-GSA Selesai. Fitness Terbaik: 549304.20
+Run 8: Mengeksekusi 20 tugas...
+Run 8 selesai dalam 23.5074 detik.
+Run 8 Metrics -> Makespan: 23.51s, Utilization: 62.37%
+
+--- Memulai Test Run ke-9 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1909507.09
+Cloudy-GSA Selesai. Fitness Terbaik: 520767.92
+Run 9: Mengeksekusi 20 tugas...
+Run 9 selesai dalam 23.0700 detik.
+Run 9 Metrics -> Makespan: 23.07s, Utilization: 56.68%
+
+--- Memulai Test Run ke-10 ---
+Memulai Cloudy-GSA (V4 - Unified Fitness, Adaptive Inertia, 1000 iterasi)...
+Estimasi Fitness Awal (Acak): 1008130.84
+Cloudy-GSA Selesai. Fitness Terbaik: 571304.31
+Run 10: Mengeksekusi 20 tugas...
+Run 10 selesai dalam 25.0267 detik.
+Run 10 Metrics -> Makespan: 25.03s, Utilization: 57.60%
+
+========================================
+HASIL AKHIR RATA-RATA DARI 10 RUN
+========================================
+    Makespan  Throughput  Total CPU Time  ...  Avg Wait Time  Imbalance Degree  Resource Utilization
+0  24.296705    0.823157      216.540288  ...       4.676608          0.966961              0.594155
+1  23.936146    0.835556      194.803443  ...       5.872355          1.037584              0.542564
+2  24.480324    0.816983      205.411888  ...       3.280506          0.969440              0.559393
+3  24.060893    0.831224      195.576654  ...       2.726857          1.241710              0.541894
+4  23.141290    0.864256      202.561391  ...       4.321202          0.947254              0.583550
+5  24.452824    0.817901      216.874492  ...       3.335736          1.035987              0.591273
+6  23.842490    0.838839      248.393578  ...       2.419722          1.526505              0.694540
+7  23.507359    0.850797      219.940725  ...       3.109984          1.070123              0.623750
+8  23.070016    0.866926      196.154878  ...       3.008629          1.053672              0.566839
+9  25.026683    0.799147      216.247394  ...       3.803095          1.202457              0.576045
+
+[10 rows x 8 columns]
+----------------------------------------
+
+RATA-RATA METRIK:
+Makespan                 : 23.9815
+Throughput               : 0.8345
+Total CPU Time           : 211.2505
+Total Wait Time          : 73.1094
+Avg Execution Time       : 10.5625
+Avg Wait Time            : 3.6555
+Imbalance Degree         : 1.1052
+Resource Utilization     : 58.7400%
+
+Ringkasan metrik disimpan ke 'summary_metrics_10_runs.csv'
