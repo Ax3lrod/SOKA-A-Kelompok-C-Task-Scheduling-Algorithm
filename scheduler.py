@@ -8,7 +8,7 @@ import sys
 import os
 from dotenv import load_dotenv
 from collections import namedtuple
-from cloudy_gsa_algorithm import cloudy_gsa_scheduler
+from shc_algo import stochastic_hill_climb
 
 # --- Konfigurasi Lingkungan ---
 
@@ -22,8 +22,8 @@ VM_SPECS = {
 }
 
 VM_PORT = 5000
-DATASET_FILE = 'dataset.txt'
-BASE_RESULTS_FILE = 'result_run' # Nanti akan jadi result_run_1.csv, dst
+DATASET_FILE = 'low_high.txt'
+BASE_RESULTS_FILE = 'results_shc'
 GSA_ITERATIONS = 1000
 TOTAL_RUNS = 10  # Jumlah pengulangan test
 
@@ -200,10 +200,8 @@ async def run_single_test(run_id: int, tasks: list[Task], vms: list[VM]) -> dict
     tasks_dict = {task.id: task for task in tasks}
     vms_dict = {vm.name: vm for vm in vms}
 
-    # 1. Jalankan Algoritma Penjadwalan
-    # Catatan: Jika algoritma deterministik, hasilnya akan selalu sama. 
-    # Jika stokastik (seperti GSA), hasil bisa berubah tiap run.
-    best_assignment = cloudy_gsa_scheduler(tasks, vms, GSA_ITERATIONS)
+    # 2. Jalankan Algoritma Penjadwalan (CloudyGSA)
+    best_assignment = stochastic_hill_climb(tasks, vms, iterations=GSA_ITERATIONS, restarts=5)
     
     # 2. Siapkan Eksekusi
     results_list = []
@@ -285,7 +283,7 @@ async def main():
                 
         # Simpan Summary ke CSV
         df_metrics.loc['Average'] = avg_metrics
-        df_metrics.to_csv('summary_metrics_10_runs.csv', index=True)
+        df_metrics.to_csv('summary_metrics_10_runs_shc.csv', index=True)
         print(f"\nRingkasan metrik disimpan ke 'summary_metrics_10_runs.csv'")
         
     else:
