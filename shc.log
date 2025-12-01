@@ -1,175 +1,137 @@
-(venv) PS C:\Users\fiorenza\SOKA-A-Kelompok-C-Task-Scheduling-Algorithm> python scheduler.py           
 Mempersiapkan 10 kali pengujian...
 
 --- Memulai Test Run ke-1 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1170000.00
-  [Restart 2] Makespan Terbaik: 1220000.00
-  [Restart 3] Makespan Terbaik: 1157500.00
-  [Restart 4] Makespan Terbaik: 1160000.00
-  [Restart 5] Makespan Terbaik: 1157500.00
-SHC Selesai. Global Makespan Terbaik: 1157500.00
+  [Restart 1] Makespan Terbaik: 2720000.00
+  [Restart 2] Makespan Terbaik: 2350000.00
+  [Restart 3] Makespan Terbaik: 1360000.00
+  [Restart 4] Makespan Terbaik: 1610000.00
+  [Restart 5] Makespan Terbaik: 1155000.00
+SHC Selesai. Global Makespan Terbaik: 1155000.00
 Run 1: Mengeksekusi 50 tugas...
-Run 1 selesai dalam 53.4850 detik.
-Run 1 Metrics -> Makespan: 53.48s, Utilization: 84.14%
+Run 1 selesai dalam 51.4220 detik.
+Run 1 Metrics -> Makespan: 51.42s, Utilization: 87.95%
 
 --- Memulai Test Run ke-2 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1150000.00
-  [Restart 2] Makespan Terbaik: 1150000.00
-  [Restart 3] Makespan Terbaik: 1180000.00
-  [Restart 4] Makespan Terbaik: 1490000.00
-  [Restart 5] Makespan Terbaik: 1600000.00
-SHC Selesai. Global Makespan Terbaik: 1150000.00
+  [Restart 1] Makespan Terbaik: 1780000.00
+  [Restart 2] Makespan Terbaik: 1380000.00
+  [Restart 3] Makespan Terbaik: 3170000.00
+  [Restart 4] Makespan Terbaik: 2180000.00
+  [Restart 5] Makespan Terbaik: 1192500.00
+SHC Selesai. Global Makespan Terbaik: 1192500.00
 Run 2: Mengeksekusi 50 tugas...
-Error pada task-9-33 di vm1: Server error '500 Internal Server Error' for url 'http://10.15.42.77:5000/task/9'
-For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
-Run 2 selesai dalam 51.5150 detik.
-Run 2 Metrics -> Makespan: 51.52s, Utilization: 80.90%
+Run 2 selesai dalam 53.1090 detik.
+Run 2 Metrics -> Makespan: 53.11s, Utilization: 81.30%
 
 --- Memulai Test Run ke-3 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1230000.00
-  [Restart 2] Makespan Terbaik: 1265000.00
-  [Restart 3] Makespan Terbaik: 1197500.00
-  [Restart 4] Makespan Terbaik: 1250000.00
-  [Restart 5] Makespan Terbaik: 1900000.00
-SHC Selesai. Global Makespan Terbaik: 1197500.00
+  [Restart 1] Makespan Terbaik: 1490000.00
+  [Restart 2] Makespan Terbaik: 1150000.00
+  [Restart 3] Makespan Terbaik: 1645000.00
+  [Restart 4] Makespan Terbaik: 1150000.00
+  [Restart 5] Makespan Terbaik: 1150000.00
+SHC Selesai. Global Makespan Terbaik: 1150000.00
 Run 3: Mengeksekusi 50 tugas...
-Run 3 selesai dalam 54.3910 detik.
-Run 3 Metrics -> Makespan: 54.39s, Utilization: 83.70%
+Error pada task-9-10 di vm1: Server error '500 Internal Server Error' for url 'http://10.15.42.77:5000/task/9'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+Run 3 selesai dalam 51.7030 detik.
+Run 3 Metrics -> Makespan: 51.70s, Utilization: 85.07%
 
 --- Memulai Test Run ke-4 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1150000.00
-  [Restart 2] Makespan Terbaik: 1157500.00
-  [Restart 3] Makespan Terbaik: 1150000.00
-  [Restart 4] Makespan Terbaik: 1157500.00
-  [Restart 5] Makespan Terbaik: 1160000.00
-SHC Selesai. Global Makespan Terbaik: 1150000.00
+  [Restart 1] Makespan Terbaik: 1160000.00
+  [Restart 2] Makespan Terbaik: 1155000.00
+  [Restart 3] Makespan Terbaik: 1155000.00
+  [Restart 4] Makespan Terbaik: 1455000.00
+  [Restart 5] Makespan Terbaik: 1157500.00
+SHC Selesai. Global Makespan Terbaik: 1155000.00
 Run 4: Mengeksekusi 50 tugas...
-Run 4 selesai dalam 51.7340 detik.
-Run 4 Metrics -> Makespan: 51.73s, Utilization: 87.48%
+Run 4 selesai dalam 51.9690 detik.
+Run 4 Metrics -> Makespan: 51.97s, Utilization: 84.98%
 
 --- Memulai Test Run ke-5 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
   [Restart 1] Makespan Terbaik: 1160000.00
-  [Restart 2] Makespan Terbaik: 1160000.00
-  [Restart 3] Makespan Terbaik: 1370000.00
-  [Restart 4] Makespan Terbaik: 1155000.00
-  [Restart 5] Makespan Terbaik: 1162500.00
-SHC Selesai. Global Makespan Terbaik: 1155000.00
+  [Restart 2] Makespan Terbaik: 1165000.00
+  [Restart 3] Makespan Terbaik: 1150000.00
+  [Restart 4] Makespan Terbaik: 1180000.00
+  [Restart 5] Makespan Terbaik: 1150000.00
+SHC Selesai. Global Makespan Terbaik: 1150000.00
 Run 5: Mengeksekusi 50 tugas...
-Run 5 selesai dalam 51.6090 detik.
-Run 5 Metrics -> Makespan: 51.61s, Utilization: 86.92%
+Run 5 selesai dalam 51.9220 detik.
+Run 5 Metrics -> Makespan: 51.92s, Utilization: 87.12%
 
 --- Memulai Test Run ke-6 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1155000.00
-  [Restart 2] Makespan Terbaik: 1250000.00
-  [Restart 3] Makespan Terbaik: 1930000.00
-  [Restart 4] Makespan Terbaik: 1225000.00
-  [Restart 5] Makespan Terbaik: 1530000.00
-SHC Selesai. Global Makespan Terbaik: 1155000.00
+  [Restart 1] Makespan Terbaik: 1152500.00
+  [Restart 2] Makespan Terbaik: 1150000.00
+  [Restart 3] Makespan Terbaik: 1150000.00
+  [Restart 4] Makespan Terbaik: 1155000.00
+  [Restart 5] Makespan Terbaik: 1590000.00
+SHC Selesai. Global Makespan Terbaik: 1150000.00
 Run 6: Mengeksekusi 50 tugas...
-Run 6 selesai dalam 52.3600 detik.
-Run 6 Metrics -> Makespan: 52.36s, Utilization: 88.88%
+Run 6 selesai dalam 52.9840 detik.
+Run 6 Metrics -> Makespan: 52.98s, Utilization: 85.84%
 
 --- Memulai Test Run ke-7 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1210000.00
-  [Restart 2] Makespan Terbaik: 1150000.00
-  [Restart 3] Makespan Terbaik: 1152500.00
-  [Restart 4] Makespan Terbaik: 1185000.00
-  [Restart 5] Makespan Terbaik: 1160000.00
+  [Restart 1] Makespan Terbaik: 1260000.00
+  [Restart 2] Makespan Terbaik: 1660000.00
+  [Restart 3] Makespan Terbaik: 1150000.00
+  [Restart 4] Makespan Terbaik: 1450000.00
+  [Restart 5] Makespan Terbaik: 1170000.00
 SHC Selesai. Global Makespan Terbaik: 1150000.00
 Run 7: Mengeksekusi 50 tugas...
-Run 7 selesai dalam 53.8900 detik.
-Run 7 Metrics -> Makespan: 53.89s, Utilization: 84.38%
+Run 7 selesai dalam 51.8590 detik.
+Run 7 Metrics -> Makespan: 51.86s, Utilization: 87.79%
 
 --- Memulai Test Run ke-8 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1335000.00
-  [Restart 2] Makespan Terbaik: 1150000.00
-  [Restart 3] Makespan Terbaik: 1155000.00
-  [Restart 4] Makespan Terbaik: 1150000.00
-  [Restart 5] Makespan Terbaik: 1150000.00
-SHC Selesai. Global Makespan Terbaik: 1150000.00
+  [Restart 1] Makespan Terbaik: 2340000.00
+  [Restart 2] Makespan Terbaik: 1155000.00
+  [Restart 3] Makespan Terbaik: 1880000.00
+  [Restart 4] Makespan Terbaik: 1220000.00
+  [Restart 5] Makespan Terbaik: 1655000.00
+SHC Selesai. Global Makespan Terbaik: 1155000.00
 Run 8: Mengeksekusi 50 tugas...
-Error pada task-10-19 di vm1: Server error '500 Internal Server Error' for url 'http://10.15.42.77:5000/task/10'
-For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
-Run 8 selesai dalam 51.9530 detik.
-Run 8 Metrics -> Makespan: 51.95s, Utilization: 82.33%
+Run 8 selesai dalam 52.7190 detik.
+Run 8 Metrics -> Makespan: 52.72s, Utilization: 87.24%
 
 --- Memulai Test Run ke-9 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1150000.00
+  [Restart 1] Makespan Terbaik: 1170000.00
   [Restart 2] Makespan Terbaik: 1150000.00
-  [Restart 3] Makespan Terbaik: 1160000.00
-  [Restart 4] Makespan Terbaik: 1320000.00
-  [Restart 5] Makespan Terbaik: 1155000.00
+  [Restart 3] Makespan Terbaik: 1620000.00
+  [Restart 4] Makespan Terbaik: 1160000.00
+  [Restart 5] Makespan Terbaik: 1205000.00
 SHC Selesai. Global Makespan Terbaik: 1150000.00
 Run 9: Mengeksekusi 50 tugas...
-Run 9 selesai dalam 53.1410 detik.
-Run 9 Metrics -> Makespan: 53.14s, Utilization: 87.67%
+Run 9 selesai dalam 51.7340 detik.
+Run 9 Metrics -> Makespan: 51.73s, Utilization: 88.76%
 
 --- Memulai Test Run ke-10 ---
 Memulai SHC (1000 iterasi per restart, 5 restarts)...
-  [Restart 1] Makespan Terbaik: 1300000.00
-  [Restart 2] Makespan Terbaik: 1180000.00
-  [Restart 3] Makespan Terbaik: 1157500.00
-  [Restart 4] Makespan Terbaik: 1167500.00
-  [Restart 5] Makespan Terbaik: 2040000.00
-SHC Selesai. Global Makespan Terbaik: 1157500.00
+  [Restart 1] Makespan Terbaik: 1930000.00
+  [Restart 2] Makespan Terbaik: 1870000.00
+  [Restart 3] Makespan Terbaik: 1210000.00
+  [Restart 4] Makespan Terbaik: 1430000.00
+  [Restart 5] Makespan Terbaik: 1150000.00
+SHC Selesai. Global Makespan Terbaik: 1150000.00
 Run 10: Mengeksekusi 50 tugas...
-Run 10 selesai dalam 52.6400 detik.
-Run 10 Metrics -> Makespan: 52.64s, Utilization: 84.70%
+Run 10 selesai dalam 51.8910 detik.
+Run 10 Metrics -> Makespan: 51.89s, Utilization: 87.53%
 
-========================================
-HASIL AKHIR RATA-RATA DARI 10 RUN
-========================================
-   Makespan  Throughput  Total CPU Time  ...  Avg Wait Time  Imbalance Degree  Resource Utilization
-0    53.485    0.934842         675.069  ...      13.958140          1.850288              0.841443    
-1    51.515    0.951179         625.150  ...      12.342612          2.077786              0.809020    
-2    54.391    0.919270         682.878  ...      14.614180          2.045847              0.836999    
-3    51.734    0.966482         678.889  ...      15.525000          1.797236              0.874846    
-4    51.609    0.968823         672.868  ...      15.408760          1.728214              0.869187    
-5    52.360    0.954927         698.067  ...      14.948360          1.951824              0.888804    
-6    53.890    0.927816         682.089  ...      15.534120          1.885742              0.843804    
-7    51.953    0.943160         641.593  ...      16.599449          2.119531              0.823299    
-8    53.141    0.940893         698.860  ...      15.406040          1.784787              0.876737    
-9    52.640    0.949848         668.786  ...      15.839680          1.821312              0.846993    
+RATA-RATA METRIK DARI SEMUA RUN:
+Makespan                 : 52.1312
+Throughput               : 0.9573
+Total CPU Time           : 675.1828
+Total Wait Time          : 757.8307
+Avg Execution Time       : 13.5306
+Avg Wait Time            : 15.1865
+Imbalance Degree         : 1.8438
+Resource Utilization     : 86.3575%
 
-[10 rows x 8 columns]
-----------------------------------------
-
-RATA-RATA METRIK:
-Makespan                 : 52.6718
-Throughput               : 0.9457
-Total CPU Time           : 672.4249
-Total Wait Time          : 747.9875
-Avg Execution Time       : 13.5002
-Avg Wait Time            : 15.0176
-Imbalance Degree         : 1.9063
-Resource Utilization     : 85.1113%
-
-Ringkasan metrik disimpan ke 'summary_metrics_10_runs.csv'
-(venv) PS C:\Users\fiorenza\SOKA-A-Kelompok-C-Task-Scheduling-Algorithm> git add .                     
-(venv) PS C:\Users\fiorenza\SOKA-A-Kelompok-C-Task-Scheduling-Algorithm> git commit -m "feat: add shc 10 runs in random simple dataset"
-[shc-run e911c45] feat: add shc 10 runs in random simple dataset
- 13 files changed, 525 insertions(+), 1222 deletions(-)
- delete mode 100644 shc.log
- create mode 100644 shc_random_simple_1.csv
- create mode 100644 shc_random_simple_10.csv
- create mode 100644 shc_random_simple_2.csv
- create mode 100644 shc_random_simple_3.csv
- create mode 100644 shc_random_simple_4.csv
- create mode 100644 shc_random_simple_5.csv
- create mode 100644 shc_random_simple_6.csv
- create mode 100644 shc_random_simple_7.csv
- create mode 100644 shc_random_simple_8.csv
- create mode 100644 shc_random_simple_9.csv
- create mode 100644 summary_metrics_10_runs_shc_random_simple.csv
 (venv) PS C:\Users\fiorenza\SOKA-A-Kelompok-C-Task-Scheduling-Algorithm> git push origin shc-run       
 Enumerating objects: 16, done.
 Counting objects: 100% (16/16), done.
