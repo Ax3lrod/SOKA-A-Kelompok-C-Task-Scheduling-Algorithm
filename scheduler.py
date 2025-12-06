@@ -23,8 +23,8 @@ VM_SPECS = {
 }
 
 VM_PORT = 5000
-DATASET_FILE = 'low_high.txt'
-BASE_RESULTS_FILE = 'cgsa_low_high'
+DATASET_FILE = 'random_simple.txt'
+BASE_RESULTS_FILE = 'cgsa_random_simple'
 GSA_ITERATIONS = 1000
 TOTAL_RUNS = 10  # Jumlah pengulangan test
 
@@ -284,7 +284,7 @@ async def main():
                 
         # Simpan Summary ke CSV
         df_metrics.loc['Average'] = avg_metrics
-        df_metrics.to_csv('summary_metrics_10_runs_cgsa_low_high.csv', index=True)
+        df_metrics.to_csv('summary_metrics_10_runs_cgsa_random_simple.csv', index=True)
         print(f"\nRingkasan metrik disimpan ke 'summary_metrics_10_runs.csv'")
         
     else:
