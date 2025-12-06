@@ -24,8 +24,8 @@ VM_SPECS = {
 }
 
 VM_PORT = 5000
-DATASET_FILE = 'random_stratified.txt'
-BASE_RESULTS_FILE = 'rr_random_stratified'
+DATASET_FILE = 'low_high.txt'
+BASE_RESULTS_FILE = 'cgsa_low_high'
 GSA_ITERATIONS = 1000
 TOTAL_RUNS = 10  # Jumlah pengulangan test
 
@@ -163,7 +163,8 @@ def calculate_metrics(results_list: list, vms: list[VM], total_schedule_time: fl
     # Hitung metrik
     total_cpu_time = success_df['exec_time'].sum()
     total_wait_time = success_df['wait_time'].sum()
-    
+
+    avg_start_time = success_df['start_time'].mean()
     avg_exec_time = success_df['exec_time'].mean()
     avg_wait_time = success_df['wait_time'].mean()
     
@@ -188,6 +189,7 @@ def calculate_metrics(results_list: list, vms: list[VM], total_schedule_time: fl
         "Throughput": throughput,
         "Total CPU Time": total_cpu_time,
         "Total Wait Time": total_wait_time,
+        "Avg Start Time": avg_start_time,
         "Avg Execution Time": avg_exec_time,
         "Avg Wait Time": avg_wait_time,
         "Imbalance Degree": imbalance_degree,
@@ -203,7 +205,8 @@ async def run_single_test(run_id: int, tasks: list[Task], vms: list[VM]) -> dict
     vms_dict = {vm.name: vm for vm in vms}
 
     # 2. Jalankan Algoritma Penjadwalan (CloudyGSA)
-    best_assignment = round_robin_algorithm(tasks, vms)
+    best_assignment = cloudy_gsa_scheduler(tasks, vms, iterations=GSA_ITERATIONS)
+    # best_assignment = round_robin
     
     # 2. Siapkan Eksekusi
     results_list = []
@@ -285,7 +288,7 @@ async def main():
                 
         # Simpan Summary ke CSV
         df_metrics.loc['Average'] = avg_metrics
-        df_metrics.to_csv('summary_metrics_10_runs_rr_random_stratified.csv', index=True)
+        df_metrics.to_csv('summary_metrics_10_runs_cgsa_low_high.csv', index=True)
         print(f"\nRingkasan metrik disimpan ke 'summary_metrics_10_runs.csv'")
         
     else:
