@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 from collections import namedtuple
 from cloudy_gsa_algorithm import cloudy_gsa_scheduler
+from rr_algo import round_robin_algorithm
 from shc_algo import stochastic_hill_climb
 
 # --- Konfigurasi Lingkungan ---
@@ -24,7 +25,7 @@ VM_SPECS = {
 
 VM_PORT = 5000
 DATASET_FILE = 'random_stratified.txt'
-BASE_RESULTS_FILE = 'cgsa_random_stratified'
+BASE_RESULTS_FILE = 'rr_random_stratified'
 GSA_ITERATIONS = 1000
 TOTAL_RUNS = 10  # Jumlah pengulangan test
 
@@ -202,7 +203,7 @@ async def run_single_test(run_id: int, tasks: list[Task], vms: list[VM]) -> dict
     vms_dict = {vm.name: vm for vm in vms}
 
     # 2. Jalankan Algoritma Penjadwalan (CloudyGSA)
-    best_assignment = cloudy_gsa_scheduler(tasks, vms, iterations=GSA_ITERATIONS)
+    best_assignment = round_robin_algorithm(tasks, vms)
     
     # 2. Siapkan Eksekusi
     results_list = []
@@ -284,7 +285,7 @@ async def main():
                 
         # Simpan Summary ke CSV
         df_metrics.loc['Average'] = avg_metrics
-        df_metrics.to_csv('summary_metrics_10_runs_cgsa_random_stratified.csv', index=True)
+        df_metrics.to_csv('summary_metrics_10_runs_rr_random_stratified.csv', index=True)
         print(f"\nRingkasan metrik disimpan ke 'summary_metrics_10_runs.csv'")
         
     else:
